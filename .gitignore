@@ -1,0 +1,15 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+*.auto.tfvars
+override.tf
+*_override.tf
+.terraformrc
+terraform.rc
+
+# Packer
+ssh_private_key_packer.pem
+*.auto.pkrvars.hcl
+*.cer
