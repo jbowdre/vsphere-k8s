@@ -1,6 +1,4 @@
 #!/bin/bash -eu
-# export KUBEADM_TOKEN="1iopsj.8w8c5aacrt1zdl6z"
-# export K8S_CONTROLPLANE_VIP="kates.lab.bowdre.net"
 
 source ./env.txt
 
