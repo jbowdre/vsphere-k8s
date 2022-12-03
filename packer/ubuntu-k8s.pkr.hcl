@@ -53,7 +53,7 @@ locals {
 //  BLOCK: source
 //  Defines the builder configuration blocks.
 
-source "vsphere-iso" "linux-ubuntu" {
+source "vsphere-iso" "ubuntu-k8s" {
 
   // vCenter Server Endpoint Settings and Credentials
   vcenter_server        = var.vsphere_endpoint
@@ -154,7 +154,7 @@ source "vsphere-iso" "linux-ubuntu" {
 
 build {
   sources = [
-    "source.vsphere-iso.linux-ubuntu"
+    "source.vsphere-iso.ubuntu-k8s"
   ]
 
   provisioner "file" {
