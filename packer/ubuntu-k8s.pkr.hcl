@@ -31,7 +31,7 @@ locals {
   build_tool            = "HashiCorp Packer ${packer.version}"
   build_date            = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
   build_description     = "Kubernetes Ubuntu 20.04 Node template\nBuild date: ${local.build_date}\nBuild tool: ${local.build_tool}"
-  shutdown_command      = "echo '${var.build_password}' | sudo -S -E shutdown -P now"
+  shutdown_command      = "sudo -S -E shutdown -P now"
   iso_paths             = ["[${var.common_iso_datastore}] ${var.iso_path}/${var.iso_file}"]
   iso_checksum          = "${var.iso_checksum_type}:${var.iso_checksum_value}"
   data_source_content   = {
