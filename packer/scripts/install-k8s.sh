@@ -1,5 +1,4 @@
 #!/bin/bash -eu
-
 chmod 600 ~/.ssh/id_ed25519 
 
 echo ">> Installing Kubernetes components..."
