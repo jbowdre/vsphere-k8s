@@ -39,5 +39,5 @@ sudo swapoff -a
 echo ".. install kubernetes version ${KUBEVERSION}"
 sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update && sudo apt-get install -y kubelet=${KUBEVERSION}-00 kubeadm=${KUBEVERSION}-00 kubectl=${KUBEVERSION}-00
+sudo apt-get update && sudo apt-get install -y kubelet="${KUBEVERSION}"-00 kubeadm="${KUBEVERSION}"-00 kubectl="${KUBEVERSION}"-00
 sudo apt-mark hold kubelet kubeadm kubectl

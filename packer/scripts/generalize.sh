@@ -23,13 +23,6 @@ sudo sh -c 'if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
   rm /etc/udev/rules.d/70-persistent-net.rules
   fi'
 
-# check for only RHEL releases
-if [[ $(awk -F= '/^ID=/{print $2}' /etc/os-release | grep rhel) ]]; then
-  echo '>> Clearing RHSM subscription...'
-  sudo subscription-manager unregister
-  sudo subscription-manager clean
-fi
-
 echo '>> Clearing temp dirs...'
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
