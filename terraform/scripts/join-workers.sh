@@ -30,7 +30,7 @@ echo ">> Joining cluster..."
 attempts_max=6
 attempt=0
 until [ -f /etc/kubernetes/discovery.yaml ]; do
-  scp -o StrictHostKeyChecking=no "${K8S_CONTROLPLANE_VIP}":discovery.yaml . 2>/dev/null
+  wget "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml" 2>/dev/null
   sudo install -o root -g root -m 600 discovery.yaml /etc/kubernetes/discovery.yaml 2>/dev/null
   if [ ! -f /etc/kubernetes/discovery.yaml ]; then
     attempt=$((attempt+1))

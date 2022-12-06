@@ -64,6 +64,8 @@ EOF
     fi
   fi
   echo ">> Waiting up to 15 minutes for all nodes to be Ready..."
+  python3 -m http.server &
+  PROC_ID=$!
   attempts_max=90
   attempt=0
   until [ "$(kubectl get nodes | grep -c ' Ready ')" == "${K8S_NODE_COUNT}" ]; do
@@ -74,6 +76,7 @@ EOF
     attempt=$((attempt+1))
     sleep 10
   done
+  kill $PROC_ID
   echo ">> Continuing after $((attempt*10)) seconds."
   echo ">> Configuring vSphere Cloud Provider Interface..."
   cat << EOF | kubectl apply -f -
@@ -371,7 +374,7 @@ else
   attempts_max=6
   attempt=0
   until [ -f /etc/kubernetes/discovery.yaml ]; do
-    scp -o StrictHostKeyChecking=no "${K8S_CONTROLPLANE_VIP}":discovery.yaml . 2>/dev/null
+    wget "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml" 2>/dev/null
     sudo install -o root -g root -m 600 discovery.yaml /etc/kubernetes/discovery.yaml 2>/dev/null
     if [ ! -f /etc/kubernetes/discovery.yaml ]; then
       attempt=$((attempt+1))
