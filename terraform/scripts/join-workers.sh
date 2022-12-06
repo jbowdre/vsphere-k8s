@@ -17,7 +17,7 @@ echo ">> Continuing after $((attempt*10)) seconds."
 echo ">> Waiting up to 10 minutes for all control-plane nodes..."
 attempts_max=60
 attempt=0
-until [ "$(ssh -o StrictHostKeyChecking=no "${K8S_CONTROLPLANE_VIP}" kubectl get nodes | grep -c " control-plane ")" -eq "${K8S_CONTROLPLANE_COUNT}" ]; do
+until "$(wget http://${K8S_CONTROLPLANE_VIP}:8000/.k8s-controlplane-success)" 2>/dev/null; do
   if [ ${attempt} -eq ${attempts_max} ]; then
     echo ">> [ERROR] Timeout waiting for control-plane nodes! <<"
     exit 1

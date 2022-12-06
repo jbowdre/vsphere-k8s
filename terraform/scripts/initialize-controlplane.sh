@@ -63,14 +63,27 @@ EOF
       exit 1
     fi
   fi
-  echo ">> Waiting up to 15 minutes for all nodes to be Ready..."
+  echo ">> Waiting up to 10 minutes for all control-plane nodes to be Ready..."
   python3 -m http.server &
   PROC_ID=$!
-  attempts_max=90
+  attempts_max=60
+  attempt=0
+  until [ "$(kubectl get nodes | grep -c ' control-plane ')" -eq "${K8S_CONTROLPLANE_COUNT}" ]; do
+    if [ ${attempt} -eq ${attempts_max} ]; then
+      echo ">> [ERROR] Timeout waiting for control-plane nodes to join! <<"
+      exit 1
+    fi
+    attempt=$((attempt+1))
+    sleep 10
+  done
+  echo ">> Continuing after $((attempt*10)) seconds."
+  touch .k8s-controlplane-success
+  echo ">> Waiting up to 10 minutes for all worker nodes to be Ready..."
+  attempts_max=60
   attempt=0
   until [ "$(kubectl get nodes | grep -c ' Ready ')" == "${K8S_NODE_COUNT}" ]; do
     if [ ${attempt} -eq ${attempts_max} ]; then
-      echo ">> [ERROR] Timeout waiting for cluster online! <<"
+      echo ">> [ERROR] Timeout waiting for worker nodes to join! <<"
       exit 1
     fi
     attempt=$((attempt+1))
