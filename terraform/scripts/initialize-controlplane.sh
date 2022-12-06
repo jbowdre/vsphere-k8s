@@ -343,10 +343,14 @@ datacenters = "${VCENTER_DATACENTER}"
 EOF
 
   kubectl create secret generic vsphere-config-secret --from-file=csi-vsphere.conf --namespace=vmware-system-csi
-  if kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/vsphere-csi-driver/v2.7.0/manifests/vanilla/vsphere-csi-driver.yaml; then
+  wget "https://raw.githubusercontent.com/kubernetes-sigs/vsphere-csi-driver/v2.7.0/manifests/vanilla/vsphere-csi-driver.yaml"
+  if [ "${K8S_CONTROLPLANE_COUNT}" -lt 3 ]; then
+    sed -i 's/replicas: 3/replicas: 1/' vsphere-csi-driver.yaml
+  fi
+  if kubectl apply -f vsphere-csi-driver.yaml; then
     echo ">> Cluster initialization complete!"
     touch .k8s-cluster-success
-    rm -f csi-vsphere.conf discovery.yaml env.txt kubeadminit.yaml initialize-controlplane.sh
+    rm -f csi-vsphere.conf discovery.yaml env.txt kubeadminit.yaml initialize-controlplane.sh vsphere-csi-driver.yaml
   else
     echo ">> [ERROR] Failed to configure CSI! <<"
   fi

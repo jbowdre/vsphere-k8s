@@ -137,6 +137,7 @@ resource "vsphere_virtual_machine" "control" {
       "echo export K8S_POD_CIDR=\"'${var.k8s-pod-cidr}'\" >> env.txt",
       "echo export K8S_CLUSTER_NAME=\"'${var.k8s-cluster-name}'\" >> env.txt",
       "echo export K8S_CONTROLPLANE_VIP=\"'${var.k8s-controlplane-vip}'\" >> env.txt",
+      "echo export K8S_CONTROLPLANE_COUNT=\"'${var.vm-control-count}'\" >> env.txt",
       "echo export KUBEVIP_VER=\"'${var.k8s-kubevip-version}'\" >> env.txt",
       "echo export K8S_NODE_COUNT=\"'${local.k8s-node-count}'\" >> env.txt",
       "echo export VCENTER_SERVER=\"'${var.vsphere-server}'\" >> env.txt",
