@@ -162,11 +162,6 @@ build {
     destination = "/tmp"
   }
 
-  provisioner "file" {
-    source      = "packer_cache/ssh_private_key_packer.pem"
-    destination = "/home/${var.build_username}/.ssh/id_ed25519"
-  }
-
   provisioner "shell" {
     execute_command     = "export KUBEVERSION=${var.k8s_version}; bash {{ .Path }}"
     expect_disconnect   = true
