@@ -10,12 +10,12 @@
 
 variable "vsphere_endpoint" {
   type        = string
-  description = "The fully qualified domain name or IP address of the vCenter Server instance. (e.g. 'sfo-w01-vc01.sfo.rainpole.io')"
+  description = "The fully qualified domain name or IP address of the vCenter Server instance. ('vcenter.lab.local')"
 }
 
 variable "vsphere_username" {
   type        = string
-  description = "The username to login to the vCenter Server instance. (e.g. 'svc-packer-vsphere@rainpole.io')"
+  description = "The username to login to the vCenter Server instance. ('packer')"
   sensitive   = true
 }
 
@@ -35,27 +35,27 @@ variable "vsphere_insecure_connection" {
 
 variable "vsphere_datacenter" {
   type        = string
-  description = "The name of the target vSphere datacenter. (e.g. 'sfo-w01-dc01')"
+  description = "The name of the target vSphere datacenter. ('Lab Datacenter')"
 }
 
 variable "vsphere_cluster" {
   type        = string
-  description = "The name of the target vSphere cluster. (e.g. 'sfo-w01-cl01')"
+  description = "The name of the target vSphere cluster. ('cluster-01')"
 }
 
 variable "vsphere_datastore" {
   type        = string
-  description = "The name of the target vSphere datastore. (e.g. 'sfo-w01-cl01-vsan01')"
+  description = "The name of the target vSphere datastore. ('datastore-01')"
 }
 
 variable "vsphere_network" {
   type        = string
-  description = "The name of the target vSphere network segment. (e.g. 'sfo-w01-dhcp')"
+  description = "The name of the target vSphere network. ('network-192.168.1.0')"
 }
 
 variable "vsphere_folder" {
   type        = string
-  description = "The name of the target vSphere cluster. (e.g. 'sfo-w01-fd-templates')"
+  description = "The name of the target vSphere folder. ('_Templates')"
 }
 
 // Virtual Machine Settings
@@ -83,36 +83,31 @@ variable "vm_guest_os_timezone" {
   default     = "UTC"
 }
 
-variable "vm_guest_os_family" {
-  type        = string
-  description = "The guest operating system family. Used for naming. (e.g. 'linux')"
-}
-
 variable "vm_guest_os_type" {
   type        = string
-  description = "The guest operating system type, also know as guestid. (e.g. 'ubuntu64Guest')"
+  description = "The guest operating system type. ('ubuntu64Guest')"
 }
 
 variable "vm_firmware" {
   type        = string
-  description = "The virtual machine firmware. (e.g. 'efi-secure'. 'efi', or 'bios')"
+  description = "The virtual machine firmware. ('efi-secure'. 'efi', or 'bios')"
   default     = "efi-secure"
 }
 
 variable "vm_cdrom_type" {
   type        = string
-  description = "The virtual machine CD-ROM type. (e.g. 'sata', or 'ide')"
+  description = "The virtual machine CD-ROM type. ('sata', or 'ide')"
   default     = "sata"
 }
 
 variable "vm_cpu_count" {
   type        = number
-  description = "The number of virtual CPUs. (e.g. '2')"
+  description = "The number of virtual CPUs. ('2')"
 }
 
 variable "vm_cpu_cores" {
   type        = number
-  description = "The number of virtual CPUs cores per socket. (e.g. '1')"
+  description = "The number of virtual CPUs cores per socket. ('1')"
 }
 
 variable "vm_cpu_hot_add" {
@@ -123,7 +118,7 @@ variable "vm_cpu_hot_add" {
 
 variable "vm_mem_size" {
   type        = number
-  description = "The size for the virtual memory in MB. (e.g. '2048')"
+  description = "The size for the virtual memory in MB. ('2048')"
 }
 
 variable "vm_mem_hot_add" {
@@ -134,13 +129,13 @@ variable "vm_mem_hot_add" {
 
 variable "vm_disk_size" {
   type        = number
-  description = "The size for the virtual disk in MB. (e.g. '61440' = 60GB)"
+  description = "The size for the virtual disk in MB. ('61440' = 60GB)"
   default     = 61440
 }
 
 variable "vm_disk_controller_type" {
   type        = list(string)
-  description = "The virtual disk controller types in sequence. (e.g. 'pvscsi')"
+  description = "The virtual disk controller types in sequence. ('pvscsi')"
   default     = ["pvscsi"]
 }
 
@@ -158,7 +153,7 @@ variable "vm_disk_eagerly_scrub" {
 
 variable "vm_network_card" {
   type        = string
-  description = "The virtual network card type. (e.g. 'vmxnet3' or 'e1000e')"
+  description = "The virtual network card type. ('vmxnet3' or 'e1000e')"
   default     = "vmxnet3"
 }
 
@@ -189,7 +184,7 @@ variable "common_template_conversion" {
 
 variable "common_content_library_name" {
   type        = string
-  description = "The name of the target vSphere content library, if used. (e.g. 'sfo-w01-cl01-lib01')"
+  description = "The name of the target vSphere content library, if used. ('Lab-CL')"
   default     = null
 }
 
@@ -248,27 +243,27 @@ variable "common_ovf_export_path" {
 
 variable "common_iso_datastore" {
   type        = string
-  description = "The name of the source vSphere datastore for ISO images. (e.g. 'sfo-w01-cl01-nfs01')"
+  description = "The name of the source vSphere datastore for ISO images. ('datastore-iso-01')"
 }
 
 variable "iso_url" {
   type        = string
-  description = "The URL source of the ISO image. (e.g. 'https://artifactory.rainpole.io/.../os.iso')"
+  description = "The URL source of the ISO image. ('https://releases.ubuntu.com/20.04.5/ubuntu-20.04.5-live-server-amd64.iso')"
 }
 
 variable "iso_path" {
   type        = string
-  description = "The path on the source vSphere datastore for ISO image. (e.g. 'iso/linux/ubuntu')"
+  description = "The path on the source vSphere datastore for ISO image. ('ISOs/Linux')"
 }
 
 variable "iso_file" {
   type        = string
-  description = "The file name of the ISO image used by the vendor. (e.g. 'ubuntu-<version>-live-server-amd64.iso')"
+  description = "The file name of the ISO image used by the vendor. ('ubuntu-20.04.5-live-server-amd64.iso')"
 }
 
 variable "iso_checksum_type" {
   type        = string
-  description = "The checksum algorithm used by the vendor. (e.g. 'sha256')"
+  description = "The checksum algorithm used by the vendor. ('sha256')"
 }
 
 variable "iso_checksum_value" {
@@ -286,7 +281,7 @@ variable "cd_label" {
 
 variable "vm_boot_order" {
   type        = string
-  description = "The boot order for virtual machines devices. (e.g. 'disk,cdrom')"
+  description = "The boot order for virtual machines devices. ('disk,cdrom')"
   default     = "disk,cdrom"
 }
 
@@ -321,7 +316,7 @@ variable "common_shutdown_timeout" {
 
 variable "build_username" {
   type        = string
-  description = "The username to login to the guest operating system. (e.g. 'rainpole')"
+  description = "The username to login to the guest operating system. ('admin')"
   sensitive   = true
 }
 
