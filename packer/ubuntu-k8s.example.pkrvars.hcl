@@ -77,10 +77,13 @@ communicator_port       = 22
 communicator_timeout    = "20m"
 common_ip_wait_timeout  = "20m"
 common_shutdown_timeout = "15m"
-build_remove_keys       = false
+vm_shutdown_command     = "sudo /usr/sbin/shutdown -P now"
+build_remove_keys       = true
 build_username          = "admin"
 build_password          = "VMware1!"
-build_key               = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpLvpxilPjpCahAQxs4RQgv+Lb5xObULXtwEoimEBpA builder"
+ssh_keys                = [
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpLvpxilPjpCahAQxs4RQgv+Lb5xObULXtwEoimEBpA builder"
+]
 
 // Provisioner Settings
 post_install_scripts = [

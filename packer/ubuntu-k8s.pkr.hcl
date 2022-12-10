@@ -5,7 +5,6 @@
 
 //  BLOCK: packer
 //  The Packer configuration.
-
 packer {
   required_version = ">= 1.8.2"
   required_plugins {
@@ -20,18 +19,21 @@ packer {
   }
 }
 
-//  BLOCK: locals
-//  Defines the local variables.
+// BLOCK: data
+// Defines data sources.
 data "sshkey" "install" {
+  type = "ed25519"
+  name = "packer_key"
 }
 
+//  BLOCK: locals
+//  Defines local variables.
 locals {
   ssh_public_key        = data.sshkey.install.public_key
   ssh_private_key_file  = data.sshkey.install.private_key_path
   build_tool            = "HashiCorp Packer ${packer.version}"
   build_date            = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
   build_description     = "Kubernetes Ubuntu 20.04 Node template\nBuild date: ${local.build_date}\nBuild tool: ${local.build_tool}"
-  shutdown_command      = "sudo -S -E shutdown -P now"
   iso_paths             = ["[${var.common_iso_datastore}] ${var.iso_path}/${var.iso_file}"]
   iso_checksum          = "${var.iso_checksum_type}:${var.iso_checksum_value}"
   data_source_content   = {
@@ -39,7 +41,7 @@ locals {
     "/user-data"            = templatefile("data/user-data.pkrtpl.hcl", {
       build_username        = var.build_username
       build_password        = bcrypt(var.build_password)
-      build_key             = var.build_key
+      ssh_keys              = concat([local.ssh_public_key], var.ssh_keys)
       vm_guest_os_language  = var.vm_guest_os_language
       vm_guest_os_keyboard  = var.vm_guest_os_keyboard
       vm_guest_os_timezone  = var.vm_guest_os_timezone
@@ -52,7 +54,6 @@ locals {
 
 //  BLOCK: source
 //  Defines the builder configuration blocks.
-
 source "vsphere-iso" "ubuntu-k8s" {
 
   // vCenter Server Endpoint Settings and Credentials
@@ -106,13 +107,12 @@ source "vsphere-iso" "ubuntu-k8s" {
   boot_wait         = var.vm_boot_wait
   boot_command      = var.vm_boot_command
   ip_wait_timeout   = var.common_ip_wait_timeout
-  shutdown_command  = local.shutdown_command
+  shutdown_command  = var.vm_shutdown_command
   shutdown_timeout  = var.common_shutdown_timeout
 
   // Communicator Settings and Credentials
   communicator              = "ssh"
   ssh_username              = var.build_username
-  ssh_password              = var.build_password
   ssh_private_key_file      = local.ssh_private_key_file
   ssh_clear_authorized_keys = var.build_remove_keys
   ssh_port                  = var.communicator_port
@@ -151,7 +151,6 @@ source "vsphere-iso" "ubuntu-k8s" {
 
 //  BLOCK: build
 //  Defines the builders to run, provisioners, and post-processors.
-
 build {
   sources = [
     "source.vsphere-iso.ubuntu-k8s"
@@ -173,6 +172,7 @@ build {
 
   provisioner "shell" {
     execute_command     = "bash {{ .Path }}"
+    expect_disconnect   = true
     scripts             = var.pre_final_scripts
   }
 }

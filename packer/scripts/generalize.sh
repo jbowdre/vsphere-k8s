@@ -30,6 +30,9 @@ sudo rm -rf /var/tmp/*
 echo '>> Clearing host keys...'
 sudo rm -f /etc/ssh/ssh_host_*
 
+echo '>> Removing Packer SSH key...'
+sed -i '/packer_key/d' ~/.ssh/authorized_keys
+
 echo '>> Clearing machine-id...'
 sudo truncate -s 0 /etc/machine-id
 if [ -f /var/lib/dbus/machine-id ]; then

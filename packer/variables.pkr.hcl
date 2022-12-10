@@ -7,7 +7,6 @@
 //  Defines the input variables.
 
 // vSphere Credentials
-
 variable "vsphere_endpoint" {
   type        = string
   description = "The fully qualified domain name or IP address of the vCenter Server instance. ('vcenter.lab.local')"
@@ -32,7 +31,6 @@ variable "vsphere_insecure_connection" {
 }
 
 // vSphere Settings
-
 variable "vsphere_datacenter" {
   type        = string
   description = "The name of the target vSphere datacenter. ('Lab Datacenter')"
@@ -59,7 +57,6 @@ variable "vsphere_folder" {
 }
 
 // Virtual Machine Settings
-
 variable "vm_name" {
   type        = string
   description = "Name of the new VM to create."
@@ -175,7 +172,6 @@ variable "common_remove_cdrom" {
 }
 
 // Template and Content Library Settings
-
 variable "common_template_conversion" {
   type        = bool
   description = "Convert the virtual machine to template. Must be 'false' for content library."
@@ -207,7 +203,6 @@ variable "common_content_library_skip_export" {
 }
 
 // Snapshot Settings
-
 variable "common_snapshot_creation" {
   type        = bool
   description = "Create a snapshot for Linked Clones."
@@ -221,7 +216,6 @@ variable "common_snapshot_name" {
 }
 
 // OVF Export Settings
-
 variable "common_ovf_export_enabled" {
   type        = bool
   description = "Enable OVF artifact export."
@@ -240,7 +234,6 @@ variable "common_ovf_export_path" {
 }
 
 // Removable Media Settings
-
 variable "common_iso_datastore" {
   type        = string
   description = "The name of the source vSphere datastore for ISO images. ('datastore-iso-01')"
@@ -278,7 +271,6 @@ variable "cd_label" {
 }
 
 // Boot Settings
-
 variable "vm_boot_order" {
   type        = string
   description = "The boot order for virtual machines devices. ('disk,cdrom')"
@@ -313,11 +305,9 @@ variable "common_shutdown_timeout" {
 }
 
 // Communicator Settings and Credentials
-
 variable "build_username" {
   type        = string
   description = "The username to login to the guest operating system. ('admin')"
-  sensitive   = true
 }
 
 variable "build_password" {
@@ -333,10 +323,11 @@ variable "build_password_encrypted" {
   default     = null
 }
 
-variable "build_key" {
-  type        = string
-  description = "The public key to login to the guest operating system."
+variable "ssh_keys" {
+  type        = list(string)
+  description = "List of public keys to be added to ~/.ssh/authorized_keys."
   sensitive   = true
+  default     = []
 }
 
 variable "build_remove_keys" {
@@ -346,7 +337,6 @@ variable "build_remove_keys" {
 }
 
 // Communicator Settings
-
 variable "communicator_port" {
   type        = string
   description = "The port for the communicator protocol."
@@ -370,7 +360,6 @@ variable "communicator_ssl" {
 }
 
 // Provisioner Settings
-
 variable "cloud_init_apt_packages" {
   type        = list(string)
   description = "A list of apt packages to install during the subiquity cloud-init installer."
@@ -396,7 +385,6 @@ variable "pre_final_scripts" {
 }
 
 // Kubernetes Settings
-
 variable "k8s_version" {
   type        = string
   description = "Kubernetes version to be installed. Latest stable is listed at https://dl.k8s.io/release/stable.txt"
