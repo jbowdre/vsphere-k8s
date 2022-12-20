@@ -79,6 +79,7 @@ resource "vsphere_virtual_machine" "control" {
   firmware = data.vsphere_virtual_machine.template.firmware
   hardware_version = data.vsphere_virtual_machine.template.hardware_version
   scsi_type = data.vsphere_virtual_machine.template.scsi_type
+  wait_for_guest_net_timeout = 10
 
   extra_config = {
     "disk.EnableUUID" = "TRUE"
@@ -163,6 +164,7 @@ resource "vsphere_virtual_machine" "worker" {
   firmware = data.vsphere_virtual_machine.template.firmware
   hardware_version = data.vsphere_virtual_machine.template.hardware_version
   scsi_type = data.vsphere_virtual_machine.template.scsi_type
+  wait_for_guest_net_timeout = 10
 
   network_interface {
     network_id = data.vsphere_network.network.id
