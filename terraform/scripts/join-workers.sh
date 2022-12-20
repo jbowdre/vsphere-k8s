@@ -17,7 +17,7 @@ echo ">> Continuing after $((attempt*10)) seconds."
 echo ">> Waiting up to 10 minutes for all control-plane nodes..."
 attempts_max=60
 attempt=0
-until "$(wget http://${K8S_CONTROLPLANE_VIP}:8000/.k8s-controlplane-success)" 2>/dev/null; do
+until wget "http://${K8S_CONTROLPLANE_VIP}:8000/.k8s-controlplane-success" 2>/dev/null; do
   if [ ${attempt} -eq ${attempts_max} ]; then
     echo ">> [ERROR] Timeout waiting for control-plane nodes! <<"
     exit 1
@@ -31,7 +31,7 @@ attempts_max=6
 attempt=0
 until [ -f /etc/kubernetes/discovery.yaml ]; do
   wget "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml" 2>/dev/null
-  sudo install -o root -g root -m 600 discovery.yaml /etc/kubernetes/discovery.yaml 2>/dev/null
+  sudo install -m 600 discovery.yaml /etc/kubernetes/discovery.yaml 2>/dev/null
   if [ ! -f /etc/kubernetes/discovery.yaml ]; then
     attempt=$((attempt+1))
     sleep 10
