@@ -98,7 +98,7 @@ resource "vsphere_virtual_machine" "control" {
     template_uuid = data.vsphere_virtual_machine.template.id
     customize {
       timeout = 0
-      
+
       linux_options {
         host_name = "${var.vm-control-name}-${count.index +1}"
         domain = var.vm-domain
@@ -178,7 +178,7 @@ resource "vsphere_virtual_machine" "worker" {
     template_uuid = data.vsphere_virtual_machine.template.id
     customize {
       timeout = 0
-      
+
       linux_options {
         host_name = "${var.vm-worker-name}-${count.index +1}"
         domain = var.vm-domain
