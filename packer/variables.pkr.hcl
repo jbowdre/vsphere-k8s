@@ -317,7 +317,6 @@ variable "common_shutdown_timeout" {
 variable "build_username" {
   type        = string
   description = "The username to login to the guest operating system. ('admin')"
-  sensitive   = true
 }
 
 variable "build_password" {

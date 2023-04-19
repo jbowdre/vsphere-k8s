@@ -5,7 +5,6 @@
 
 //  BLOCK: packer
 //  The Packer configuration.
-
 packer {
   required_version = ">= 1.8.2"
   required_plugins {
@@ -20,20 +19,22 @@ packer {
   }
 }
 
-//  BLOCK: locals
-//  Defines the local variables.
+// BLOCK: data
+// Defines data sources.
 data "sshkey" "install" {
   type = "ed25519"
   name = "packer_key"
 }
 
+//  BLOCK: locals
+//  Defines local variables.
 locals {
   ssh_public_key        = data.sshkey.install.public_key
   ssh_private_key_file  = data.sshkey.install.private_key_path
   build_tool            = "HashiCorp Packer ${packer.version}"
   build_date            = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
   build_description     = "Kubernetes Ubuntu 20.04 Node template\nBuild date: ${local.build_date}\nBuild tool: ${local.build_tool}"
-  shutdown_command      = "sudo -S -E shutdown -P now"
+  shutdown_command      = "sudo /usr/sbin/shutdown -P now"
   iso_paths             = ["[${var.common_iso_datastore}] ${var.iso_path}/${var.iso_file}"]
   iso_checksum          = "${var.iso_checksum_type}:${var.iso_checksum_value}"
   data_source_content   = {
@@ -54,7 +55,6 @@ locals {
 
 //  BLOCK: source
 //  Defines the builder configuration blocks.
-
 source "vsphere-iso" "ubuntu-k8s" {
 
   // vCenter Server Endpoint Settings and Credentials
@@ -103,7 +103,7 @@ source "vsphere-iso" "ubuntu-k8s" {
   cd_content                = local.data_source_content
   cd_label                  = var.cd_label
 
-  // Boot and Provisioning Settings 
+  // Boot and Provisioning Settings
   boot_order        = var.vm_boot_order
   boot_wait         = var.vm_boot_wait
   boot_command      = var.vm_boot_command
@@ -139,7 +139,7 @@ source "vsphere-iso" "ubuntu-k8s" {
   // OVF Export Settings
   dynamic "export" {
     for_each            = var.common_ovf_export_enabled == true ? [1] : []
-    content {     
+    content {
       name              = var.vm_name
       force             = var.common_ovf_export_overwrite
       options           = [
@@ -152,7 +152,6 @@ source "vsphere-iso" "ubuntu-k8s" {
 
 //  BLOCK: build
 //  Defines the builders to run, provisioners, and post-processors.
-
 build {
   sources = [
     "source.vsphere-iso.ubuntu-k8s"
@@ -174,6 +173,7 @@ build {
 
   provisioner "shell" {
     execute_command     = "bash {{ .Path }}"
+    expect_disconnect   = true
     scripts             = var.pre_final_scripts
   }
 }
