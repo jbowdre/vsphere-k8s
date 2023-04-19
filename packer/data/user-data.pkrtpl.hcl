@@ -183,7 +183,9 @@ autoinstall:
         lock-passwd: false
         sudo: ALL=(ALL) NOPASSWD:ALL
         shell: /bin/bash
-%{ if length( build_key ) > 0 ~}
+%{ if length( ssh_keys ) > 0 ~}
         ssh_authorized_keys:
-          - ${ build_key }
+%{ for ssh_key in ssh_keys ~}
+          - ${ ssh_key }
+%{ endfor ~}
 %{ endif ~}

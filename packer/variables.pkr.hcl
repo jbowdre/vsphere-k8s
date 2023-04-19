@@ -333,10 +333,11 @@ variable "build_password_encrypted" {
   default     = null
 }
 
-variable "build_key" {
-  type        = string
-  description = "The public key to login to the guest operating system."
+variable "ssh_keys" {
+  type        = list(string)
+  description = "List of public keys to be added to ~/.ssh/authorized_keys."
   sensitive   = true
+  default     = []
 }
 
 variable "build_remove_keys" {

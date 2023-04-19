@@ -23,6 +23,8 @@ packer {
 //  BLOCK: locals
 //  Defines the local variables.
 data "sshkey" "install" {
+  type = "ed25519"
+  name = "packer_key"
 }
 
 locals {
@@ -39,7 +41,7 @@ locals {
     "/user-data"            = templatefile("data/user-data.pkrtpl.hcl", {
       build_username        = var.build_username
       build_password        = bcrypt(var.build_password)
-      build_key             = var.build_key
+      ssh_keys              = concat([local.ssh_public_key], var.ssh_keys)
       vm_guest_os_language  = var.vm_guest_os_language
       vm_guest_os_keyboard  = var.vm_guest_os_keyboard
       vm_guest_os_timezone  = var.vm_guest_os_timezone
@@ -112,7 +114,6 @@ source "vsphere-iso" "ubuntu-k8s" {
   // Communicator Settings and Credentials
   communicator              = "ssh"
   ssh_username              = var.build_username
-  ssh_password              = var.build_password
   ssh_private_key_file      = local.ssh_private_key_file
   ssh_clear_authorized_keys = var.build_remove_keys
   ssh_port                  = var.communicator_port
