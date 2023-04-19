@@ -17,7 +17,7 @@ echo ">> Continuing after $((attempt*10)) seconds."
 echo ">> Waiting up to 10 minutes for all control-plane nodes..."
 attempts_max=60
 attempt=0
-until "$(wget http://${K8S_CONTROLPLANE_VIP}:8000/.k8s-controlplane-success)" 2>/dev/null; do
+until curl --fail "http://${K8S_CONTROLPLANE_VIP}:8000/.k8s-controlplane-success" 2>/dev/null; do
   if [ ${attempt} -eq ${attempts_max} ]; then
     echo ">> [ERROR] Timeout waiting for control-plane nodes! <<"
     exit 1
@@ -26,18 +26,26 @@ until "$(wget http://${K8S_CONTROLPLANE_VIP}:8000/.k8s-controlplane-success)" 2>
   sleep 10
 done
 echo ">> Continuing after $((attempt*10)) seconds."
-echo ">> Joining cluster..."
+echo ">> Retrieving cluster discovery config..."
 attempts_max=6
 attempt=0
-until [ -f /etc/kubernetes/discovery.yaml ]; do
-  wget "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml" 2>/dev/null
-  sudo install -o root -g root -m 600 discovery.yaml /etc/kubernetes/discovery.yaml 2>/dev/null
-  if [ ! -f /etc/kubernetes/discovery.yaml ]; then
+until [ -f ~/discovery.yaml ] || [ ${attempt} -eq ${attempts_max} ]; do
+  wget "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml"
+  sleep 2
+  if ! [ -f ~/discovery.yaml ]; then
+    echo ">> Unable to retrieve config..."
     attempt=$((attempt+1))
-    sleep 10
+    sleep 8
   fi
 done
-
+if ! [ -f ~/discovery.yaml ]; then
+  echo ">> Timeout reached while retrieving config!"
+  echo "Exiting."
+  exit 1
+fi
+sudo install -o root -g root -m 600 discovery.yaml /etc/kubernetes/discovery.yaml
+echo ">> Successfully discovered cluster!"
+echo ">> Discovered cluster!"
 cat << EOF > kubeadmjoin.yaml
 apiVersion: kubeadm.k8s.io/v1beta3
 caCertPath: /etc/kubernetes/pki/ca.crt
