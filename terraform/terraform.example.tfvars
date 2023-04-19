@@ -20,15 +20,15 @@ vm-domain = "lab.local"
 # Control plane specs
 vm-control-count = "3"
 vm-control-cpu = "2"
-vm-control-ram = "2048"
+vm-control-ram = "4096"
 vm-control-disk-size = "30"
 vm-control-ip-address-start = "60"
 vm-control-name = "k8s-control"
 
 # Worker specs
 vm-worker-count = "3"
-vm-worker-cpu = "1"
-vm-worker-ram = "1024"
+vm-worker-cpu = "4"
+vm-worker-ram = "8192"
 vm-worker-disk-size = "30"
 vm-worker-ip-address-start = "64"
 vm-worker-name = "k8s-worker"

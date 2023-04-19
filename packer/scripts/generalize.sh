@@ -2,10 +2,10 @@
 # Prepare a VM to become a template.
 
 echo '>> Clearing audit logs...'
-sudo sh -c 'if [ -f /var/log/audit/audit.log ]; then 
-  cat /dev/null > /var/log/audit/audit.log 
+sudo sh -c 'if [ -f /var/log/audit/audit.log ]; then
+  cat /dev/null > /var/log/audit/audit.log
   fi'
-sudo sh -c 'if [ -f /var/log/wtmp ]; then 
+sudo sh -c 'if [ -f /var/log/wtmp ]; then
   cat /dev/null > /var/log/wtmp
   fi'
 sudo sh -c 'if [ -f /var/log/lastlog ]; then
@@ -31,7 +31,7 @@ echo '>> Clearing host keys...'
 sudo rm -f /etc/ssh/ssh_host_*
 
 echo '>> Removing Packer SSH key...'
-sed -i '/packer_temp_key/d' ~/.ssh/authorized_keys
+sed -i '/packer_key/d' ~/.ssh/authorized_keys
 
 echo '>> Clearing machine-id...'
 sudo truncate -s 0 /etc/machine-id

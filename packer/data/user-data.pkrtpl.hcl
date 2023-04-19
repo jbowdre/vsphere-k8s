@@ -178,7 +178,6 @@ autoinstall:
     hostname: ${ vm_guest_os_hostname }
     users:
       - name: ${ build_username }
-        passwd: "${ build_password }"
         groups: [adm, cdrom, dip, plugdev, lxd, sudo]
         lock-passwd: false
         sudo: ALL=(ALL) NOPASSWD:ALL

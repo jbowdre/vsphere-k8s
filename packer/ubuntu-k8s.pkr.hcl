@@ -41,7 +41,6 @@ locals {
     "/meta-data"            = file("data/meta-data")
     "/user-data"            = templatefile("data/user-data.pkrtpl.hcl", {
       build_username        = var.build_username
-      build_password        = bcrypt(var.build_password)
       ssh_keys              = concat([local.ssh_public_key], var.ssh_keys)
       vm_guest_os_language  = var.vm_guest_os_language
       vm_guest_os_keyboard  = var.vm_guest_os_keyboard
@@ -108,7 +107,7 @@ source "vsphere-iso" "ubuntu-k8s" {
   boot_wait         = var.vm_boot_wait
   boot_command      = var.vm_boot_command
   ip_wait_timeout   = var.common_ip_wait_timeout
-  shutdown_command  = local.shutdown_command
+  shutdown_command  = var.vm_shutdown_command
   shutdown_timeout  = var.common_shutdown_timeout
 
   // Communicator Settings and Credentials

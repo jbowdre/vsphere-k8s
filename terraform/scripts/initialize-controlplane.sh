@@ -1,18 +1,17 @@
 #!/bin/bash -eu
 source ./env.txt
 
-if [ ! -f /etc/kubernetes/manifests/kube-vip.yaml ]; then
-  echo ">> Configuring kube-vip..."
-  sudo ctr image pull ghcr.io/kube-vip/kube-vip:"${KUBEVIP_VER}"
-  sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:"${KUBEVIP_VER}" vip /kube-vip manifest pod \
-    --interface ens192 \
-    --vip "${K8S_CONTROLPLANE_VIP}" \
-    --controlplane \
-    --arp \
-    --leaderElection | sudo tee /etc/kubernetes/manifests/kube-vip.yaml
-fi
-
 if [ "${HOSTNAME}" == "${K8S_INITIAL_NODE}" ]; then
+  if [ ! -f /etc/kubernetes/manifests/kube-vip.yaml ]; then
+    echo ">> Configuring kube-vip..."
+    sudo ctr image pull ghcr.io/kube-vip/kube-vip:"${KUBEVIP_VER}"
+    sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:"${KUBEVIP_VER}" vip /kube-vip manifest pod \
+      --interface ens192 \
+      --vip "${K8S_CONTROLPLANE_VIP}" \
+      --controlplane \
+      --arp \
+      --leaderElection | sudo tee /etc/kubernetes/manifests/kube-vip.yaml
+  fi
   if ! kubectl get nodes 2>/dev/null; then
     echo ">> Bootstrapping first controlplane node..."
     cat << EOF > kubeadminit.yaml
@@ -57,7 +56,7 @@ EOF
 
       echo ">> Creating discovery config..."
       kubectl -n kube-public get configmap cluster-info -o jsonpath='{.data.kubeconfig}' > discovery.yaml
-      sudo install -o root -g root -m 600 discovery.yaml /etc/kubernetes/discovery.yaml
+      sudo install -m 600 discovery.yaml /etc/kubernetes/discovery.yaml
     else
       echo ">> [ERROR] Cluster initialization unsuccessful on ${HOSTNAME}! <<"
       exit 1
