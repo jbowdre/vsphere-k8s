@@ -13,3 +13,7 @@ terraform.rc
 ssh_private_key_packer.pem
 *.auto.pkrvars.hcl
 *.cer
+
+# misc local configs
+env.sh
+
