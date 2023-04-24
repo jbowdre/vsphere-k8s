@@ -383,10 +383,11 @@ else
   done
   echo ">> Continuing after $((attempt*10)) seconds."
   echo ">> Retrieving cluster discovery config..."
+  sleep 2
   attempts_max=6
   attempt=0
   until [ -f ~/discovery.yaml ] || [ ${attempt} -eq ${attempts_max} ]; do
-    wget "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml"
+    curl -o discovery.yaml --fail "http://${K8S_CONTROLPLANE_VIP}:8000/discovery.yaml" 2>/dev/null
     sleep 2
     if ! [ -f ~/discovery.yaml ]; then
       echo ">> Unable to retrieve config..."
