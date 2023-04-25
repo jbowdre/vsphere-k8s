@@ -308,3 +308,20 @@ spec:
 EOF
 kubectl apply -f pinniped-concierge.yaml
 ```
+
+Configure ClusterRoleBinding
+```shell
+kubectl create clusterrolebinding let-me-edit \
+  --clusterrole edit \
+  --user john@lab.bowdre.net
+```
+
+Export Pinniped-enhanced kubeconfig
+```shell
+pinniped get kubeconfig > pinniped-kubeconfig
+```
+
+Log in with Pinniped/AD
+```shell
+kubectl get namespaces --kubeconfig ./pinniped-kubeconfig
+```
